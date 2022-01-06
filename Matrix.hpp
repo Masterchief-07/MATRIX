@@ -22,8 +22,8 @@ class Matrix
 		~Matrix();
 
 		//getting value in the matrix
-		T at(int pos);
-		T at(int row, int colomn);
+		T const at(int pos) const;
+		T const at(int row, int colomn) const;
 
 		//setting value in the matrix
 		void set(int pos, double value);
@@ -31,13 +31,26 @@ class Matrix
 
 		//void printArray
 		void print();
+
+		//operator
+		Matrix<T>& operator+= (Matrix<T> const& mat);
+		Matrix<T>& operator-= (Matrix<T> const& mat);
+		Matrix<T>& operator/= (Matrix<T> const& mat);
+		Matrix<T>& operator*= (Matrix<T> const& mat);
+		Matrix<T> operator+ (Matrix<T> const& mat);
+		Matrix<T> operator- (Matrix<T> const& mat);
+		Matrix<T> operator/ (Matrix<T> const& mat);
+		Matrix<T> operator* (Matrix<T> const& mat);
 	private:
 		int m_dimX, m_dimY;
 		std::vector<T> *m_matrix;
 
 		//comput position
-		int getPos(int x);
-		int getPos(int row, int column);
+		int const getPos(int x) const;
+		int const getPos(int row, int column) const ;
+		//get row or column
+		int const getRow() const;
+		int const getCol() const;
 };
 
 
@@ -75,35 +88,34 @@ Matrix<T>::~Matrix()
 
 //comput the position
 template<typename T>
-int Matrix<T>::getPos(int row, int column)
+int const Matrix<T>::getPos(int row, int column)const 
 {
 	assert(row<m_dimX && column<m_dimY);
 	return row*(m_dimY) + column;
 }
 
 template<typename T>
-int Matrix<T>::getPos(int pos)
+int const Matrix<T>::getPos(int pos) const
 {
-	assert(pos<m_dimY);
+	assert(pos<(m_dimY*m_dimX));
 	return pos;
 }
 
 //get data at position x
 template<typename T>
-T Matrix<T>::at(int pos)
+T const Matrix<T>::at(int pos) const
 {
 	return m_matrix->at(getPos(pos));
 }
 
 template<typename T>
-T Matrix<T>::at(int posX, int posY)
+T const Matrix<T>::at(int posX, int posY) const
 {
 	return m_matrix->at(getPos(posX, posY)); 
 
 }
 
 //setting data at position
-
 template<typename T>
 void Matrix<T>::set(int pos, double value)
 {
@@ -121,7 +133,94 @@ void Matrix<T>::set(int row, int column, double value)
 template<typename T>
 void Matrix<T>::print()
 {
-	for(auto const& i: (*m_matrix))
+	for(int i=0; i<m_dimX; i++)
+	{	
+		for(int j=0; j < m_dimY; j++)
+		{
+			std::cout<<this->at(i,j)<<" ";
+		}
+		std::cout<<"\n";
+	}
+	/*for(auto const& i: (*m_matrix))
 		std::cout<<i<<" ";
 	std::cout<<"\n";
+	*/
 }
+
+//get row et columns
+template<typename T>
+int const Matrix<T>::getRow() const
+{
+	return m_dimX;
+}
+
+template<typename T>
+int const Matrix<T>::getCol() const
+{
+	return m_dimY;
+}
+
+//operator
+
+template<typename T>
+Matrix<T>& Matrix<T>::operator+= (Matrix<T> const& mat)
+{
+	assert(mat.getRow() == m_dimX && mat.getCol() == m_dimY);
+	for(long unsigned int i=0; i<m_matrix->size(); i++)
+		(*m_matrix)[i]+=mat.at(i);
+	return *this;
+}
+template<typename T>
+Matrix<T>& Matrix<T>::operator-= (Matrix<T> const& mat)
+{	
+	assert(mat.getRow() == m_dimX && mat.getCol() == m_dimY);
+	for(long unsigned int i=0; i<m_matrix->size(); i++)
+		(*m_matrix)[i]-=mat.at(i);
+	return *this;
+}
+template<typename T>
+Matrix<T>& Matrix<T>::operator/= (Matrix<T> const& mat)
+{
+	assert(mat.getRow() == m_dimX && mat.getCol() == m_dimY);
+	for(long unsigned int i=0; i<m_matrix->size(); i++)
+		(*m_matrix)[i]/=mat.at(i);
+	return *this;
+}
+template<typename T>
+Matrix<T>& Matrix<T>::operator*= (Matrix<T> const& mat)
+{
+	assert(mat.getRow() == m_dimX && mat.getCol() == m_dimY);
+	for(long unsigned int i=0; i < m_matrix->size(); i++)
+		(*m_matrix)[i]*=mat.at(i);
+	return *this;
+}
+
+template<typename T>
+Matrix<T> Matrix<T>::operator+ (Matrix<T> const& mat)
+{
+	auto matrix(*this);
+	matrix+=mat;
+	return matrix;
+}
+template<typename T>
+Matrix<T> Matrix<T>::operator- (Matrix<T> const& mat)
+{
+	auto matrix(*this);
+	matrix-=mat;
+	return matrix;
+}
+template<typename T>
+Matrix<T> Matrix<T>::operator/ (Matrix<T> const& mat)
+{
+	auto matrix(*this);
+	matrix/=mat;
+	return matrix;
+}
+template<typename T>
+Matrix<T> Matrix<T>::operator* (Matrix<T> const& mat)
+{
+	Matrix<T> matrix = *this;
+	matrix*=mat;
+	return matrix;
+}
+
