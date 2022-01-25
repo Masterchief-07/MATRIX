@@ -10,11 +10,12 @@
 #include <array>
 
 
-template<typename T, int row, int col>
+template<typename T, size_t row, size_t col>
 class Matrix
 {
 	private:
-		std::array<T, row*col> m_matrix;
+		size_t _row, _col;
+		std::array<T, row*col> _matrix;
 		std::size_t  const getPos(std::size_t r, std::size_t c) const; //matrix position
 		T const get(std::size_t r, std::size_t c) const;
 		T const get(std::size_t r) const;
@@ -51,25 +52,25 @@ class Matrix
 
 // ******************************************************************************
 //constructor
-template<typename T, int row, int col>
-Matrix<T,row,col>::Matrix()
+template<typename T, size_t row, size_t col>
+Matrix<T,row,col>::Matrix():_row(row), _col(col)
 {}
 
-template<typename T, int row, int col>
-Matrix<T,row,col>::Matrix(T x)
+template<typename T, size_t row, size_t col>
+Matrix<T,row,col>::Matrix(T x):_row(row), _col(col)
 {
-	for(auto & i: m_matrix)
+	for(auto & i: _matrix)
 	{
 		i = x;
 	}
 }
-template<typename T, int row, int col>
+template<typename T, size_t row, size_t col>
 Matrix<T,row,col>::~Matrix()
 {}
 
 // ******************************************************************************
 //get the position
-template<typename T, int row, int col>
+template<typename T, size_t row, size_t col>
 std::size_t const Matrix<T,row,col>::getPos(std::size_t x, std::size_t y) const
 {
 	return x*col + y;
@@ -77,14 +78,14 @@ std::size_t const Matrix<T,row,col>::getPos(std::size_t x, std::size_t y) const
 
 // ******************************************************************************
 //print the matrix
-template<typename T, int row, int col>
+template<typename T, size_t row, size_t col>
 void const Matrix<T,row,col>::print() const
 {
-	for(int i=0; i<row; i++)
+	for(size_t i=0; i<_row; i++)
 	{
-		for(int j=0; j<col; j++)
+		for(size_t j=0; j<_col; j++)
 		{
-			std::cout<<m_matrix[getPos(i,j)]<<" ";
+			std::cout<<_matrix[getPos(i,j)]<<" ";
 		}
 		std::cout<<"\n";
 	}
@@ -92,106 +93,108 @@ void const Matrix<T,row,col>::print() const
 
 // ******************************************************************************
 //getter setter
-template<typename T, int row, int col>
+template<typename T, size_t row, size_t col>
 T const Matrix<T, row, col>::get(std::size_t r, std::size_t c) const
 {
-	assert(r < row && c < col);
-	return m_matrix[getPos(r,c)];
+	assert(r < _row && c < _col);
+	return _matrix[getPos(r,c)];
 }
-template<typename T, int row, int col>
+template<typename T, size_t row, size_t col>
 T const Matrix<T, row, col>::get(std::size_t x) const
 {
-	assert(x<m_matrix.size());
-	return m_matrix[x];
+	assert(x<_matrix.size());
+	return _matrix[x];
 }
-template<typename T, int row, int col>
+template<typename T, size_t row, size_t col>
 void Matrix<T, row,col>::set(T value, std::size_t r, std::size_t c)
 {
-	m_matrix[getPos(r,c)] = value;
+	_matrix[getPos(r,c)] = value;
 }
-template<typename T, int row, int col>
+template<typename T, size_t row, size_t col>
 void Matrix<T, row,col>::set(T value, std::size_t x)
 {
-	m_matrix[getPos(x)] = value;
+	_matrix[getPos(x)] = value;
 }
 
+// ******************************************************************************
 //transposing
-template<typename T, int row, int col>
+template<typename T, size_t row, size_t col>
 Matrix<T, row, col> Matrix<T, row, col>::Tr()
 {
-	Matrix<T, row, col> mat = *this;
-	mat.T_();
+	Matrix<T, row, col> mat{*this};
+	//mat.T_();
+	mat.Tr_();
 	return mat;
 }
-template<typename T, int row, int col>
+template<typename T, size_t row, size_t col>
 void Matrix<T, row, col>::Tr_()
 {
-	int middle = row;
-	row = col;
-	col = middle;	
+	size_t middle = _row;
+	_row = _col;
+	_col = middle;	
 }
 // ******************************************************************************
 //opertor overloading
-template<typename T, int row, int col>
+template<typename T, size_t row, size_t col>
 Matrix<T, row, col> Matrix<T, row, col>::operator+=(Matrix<T,row,col> const& mat)
 {
-	for(std::size_t i = 0; i < m_matrix.size(); i++)
-		m_matrix[i] += mat.get(i);
+	for(std::size_t i = 0; i < _matrix.size(); i++)
+		_matrix[i] += mat.get(i);
 
 	return *this;
 }	
-template<typename T, int row, int col>
+template<typename T, size_t row, size_t col>
 Matrix<T, row, col> Matrix<T, row, col>::operator-=(Matrix<T,row,col> const& mat)
 {
-	for(std::size_t i = 0; i < m_matrix.size(); i++)
-		m_matrix[i] -= mat.get(i);
+	for(std::size_t i = 0; i < _matrix.size(); i++)
+		_matrix[i] -= mat.get(i);
 
 	return *this;
 }	
-template<typename T, int row, int col>
+template<typename T, size_t row, size_t col>
 Matrix<T, row, col> Matrix<T, row, col>::operator*=(Matrix<T,row,col> const& mat)
 {
-	for(std::size_t i = 0; i < m_matrix.size(); i++)
-		m_matrix[i] *= mat.get(i);
+	for(std::size_t i = 0; i < _matrix.size(); i++)
+		_matrix[i] *= mat.get(i);
 
 	return *this;
 }	
-template<typename T, int row, int col>
+template<typename T, size_t row, size_t col>
 Matrix<T, row, col> Matrix<T, row, col>::operator/=(Matrix<T,row,col> const& mat)
 {
-	for(std::size_t i = 0; i < m_matrix.size(); i++)
-		m_matrix[i] /= mat.get(i);
+	for(std::size_t i = 0; i < _matrix.size(); i++)
+		_matrix[i] /= mat.get(i);
 
 	return *this;
 }
 
 //operator overloading with value
 
-template<typename T, int row, int col>
+template<typename T, size_t row, size_t col>
 Matrix<T, row, col> Matrix<T, row,col>::operator+=(T value)
 {
-	for(auto &i : m_matrix)
+	for(auto &i : _matrix)
 		i += value;
 	return *this;
 }
-template<typename T, int row, int col>
+template<typename T, size_t row, size_t col>
 Matrix<T, row, col> Matrix<T, row,col>::operator-=(T value)
 {
-	for(auto &i : m_matrix)
+	for(auto &i : _matrix)
 		i -= value;
 	return *this;
 }	
-template<typename T, int row, int col>
+template<typename T, size_t row, size_t col>
 Matrix<T, row, col> Matrix<T, row,col>::operator*=(T value)
 {
-	for(auto &i : m_matrix)
+	for(auto &i : _matrix)
 		i *= value;
 	return *this;
 }	
-template<typename T, int row, int col>
+template<typename T, size_t row, size_t col>
 Matrix<T, row, col> Matrix<T, row,col>::operator/=(T value)
 {
-	for(auto &i : m_matrix)
+	for(auto &i : _matrix)
 		i /= value;
 	return *this;
 }	
