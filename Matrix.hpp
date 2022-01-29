@@ -5,11 +5,11 @@
 */
 
 #pragma once
-
 #include <cassert>
 #include <ostream>
 #include <iterator>
 #include <cstddef>
+#include <algorithm>
 
 namespace Matrix
 {
@@ -62,9 +62,36 @@ namespace Matrix
 			pointer m_ptr;
 
 		};
+		struct ConstIterator
+		{
+			using iterator_category = std::forward_iterator_tag;
+			using difference_type 	= std::ptrdiff_t;
+			using value_type 		= T;
+			using pointer 			= T*;
+			using reference 		= T&;
+
+			ConstIterator(pointer ptr):m_ptr{ptr} {}
+
+			const reference operator*() const{return *m_ptr;}
+			pointer operator->(){return m_ptr;}
+
+			ConstIterator& operator++(){m_ptr++; return *this;}							//prefix increment
+			ConstIterator  operator++(int){ConstIterator tmp = *this; ++(*this); return tmp;}	//postfix increment
+
+			friend bool operator==(const ConstIterator& a, const ConstIterator& b) { return a.m_ptr == b.m_ptr;}
+			friend bool operator!=(const ConstIterator& a, const ConstIterator& b) { return a.m_ptr != b.m_ptr;}
+
+			private:
+			pointer m_ptr;
+
+		};
 			//iterator func
 		Iterator begin() {return Iterator{_arr};}
+		ConstIterator cbegin() const{return ConstIterator{_arr};}
+		//Iterator begin() const {return Iterator{_arr};}
 		Iterator end() {return Iterator{_arr+_size};}
+		ConstIterator cend() const {return ConstIterator{_arr + _size};}
+		//Iterator end() const {return Iterator{_arr+_size};}
 		//utils func
 			void print();
 			T const get(size_t const& x, size_t const& y) const;
@@ -77,7 +104,7 @@ namespace Matrix
 			Matrix<T>* operator/=(Matrix<T> const& a);
 			Matrix<T>* operator*=(Matrix<T> const& a);
 
-			//Matrix<T> operator+(Matrix<T>& a, Matrix<T>& b);
+			Matrix<T> operator+(Matrix<T> const& a, Matrix<T> const& b);
 			//Matrix<T> operator-(Matrix<T>& a, Matrix<T>& b);
 			//Matrix<T> operator*(Matrix<T>& a, Matrix<T>& b);
 			//Matrix<T> operator/(Matrix<T>& a, Matrix<T>& b);
@@ -144,25 +171,20 @@ namespace Matrix
 	Matrix<T>* Matrix<T>::operator+=(Matrix<T> const& a)
 	{
 		assert(_x == a.getX() && _y == a.getY());
-		for(size_t i = 0; i < _x; ++i)
+		for(auto it = this->begin(), jt = a.cbegin(); it != this->end(); ++it, ++jt)
 		{
-			for(size_t j = 0;  j < _y; ++j)
-			{
-				_arr[_getIndex(i,j)] += a.get(i,j);
-			}
+			*it += *jt;
 		}
+		
 		return this;
 	}
 	template<typename T>
 	Matrix<T>* Matrix<T>::operator-=(Matrix<T> const& a)
 	{
 		assert(_x == a.getX() && _y == a.getY());
-		for(size_t i = 0; i < _x; ++i)
+		for(auto it = this->begin(), jt = a.cbegin(); it != this->end(); ++it, ++jt)
 		{
-			for(size_t j = 0;  j < _y; ++j)
-			{
-				_arr[_getIndex(i,j)] -= a.get(i,j);
-			}
+			*it -= *jt;
 		}
 		return this;
 	}
@@ -170,12 +192,9 @@ namespace Matrix
 	Matrix<T>* Matrix<T>::operator/=(Matrix<T> const& a)
 	{
 		assert(_x == a.getX() && _y == a.getY());
-		for(size_t i = 0; i < _x; ++i)
+		for(auto it = this->begin(), jt = a.cbegin(); it != this->end(); ++it, ++jt)
 		{
-			for(size_t j = 0;  j < _y; ++j)
-			{
-				_arr[_getIndex(i,j)] /= a.get(i,j);
-			}
+			*it /= *jt;
 		}
 		return this;
 	}
@@ -183,12 +202,9 @@ namespace Matrix
 	Matrix<T>* Matrix<T>::operator*=(Matrix<T> const& a)
 	{
 		assert(_x == a.getX() && _y == a.getY());
-		for(size_t i = 0; i < _x; ++i)
+		for(auto it = this->begin(), jt = a.cbegin(); it != this->end(); ++it, ++jt)
 		{
-			for(size_t j = 0;  j < _y; ++j)
-			{
-				_arr[_getIndex(i,j)] *= a.get(i,j);
-			}
+			*it *= *jt;
 		}
 		return this;
 	}
