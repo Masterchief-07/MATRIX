@@ -9,8 +9,9 @@
 #include <cassert>
 #include <array>
 
-
-template<typename T, size_t row, size_t col>
+namespace MATRIX
+{
+	template<typename T, size_t row, size_t col>
 class Matrix
 {
 	private:
@@ -67,7 +68,6 @@ class Matrix
 		friend Matrix<T, row, col> operator*(Matrix<T,row,col> mat, T value){ mat*=value; return mat;}
 		friend Matrix<T, row, col> operator/(Matrix<T,row,col> mat, T value){ mat/=value; return mat;}
 };
-
 // ******************************************************************************
 //constructor
 template<typename T, size_t row, size_t col>
@@ -269,4 +269,4 @@ constexpr Matrix<T, row, col> Matrix<T, row,col>::operator/=(T value)
 		i /= value;
 	return *this;
 }	
-
+};

@@ -3,6 +3,8 @@
 
 int main()
 {
+	using namespace MATRIX;
+
 	std::cout<<"begin \n";
 	const size_t X=5, Y=3;
 	Matrix<double, X, Y> matrix{2.f};
