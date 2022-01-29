@@ -49,9 +49,9 @@ class Matrix
 		constexpr const T 	at(std::size_t const& r, std::size_t const& c)const { return _matrix.at(_getPos(r, c));}
 		constexpr void 		set(T value, std::size_t r, std::size_t c);
 		//operator overloading
-		std::array<T, col> 				operator[]	(size_t const& position);
-		Matrix<T, row, col>& 			operator=	(std::array<T, row*col>const& array);
-		Matrix<T, row, col>& 			operator=	(Matrix<T, row, col>const& mat);
+		constexpr std::array<T, col> 				operator[]	(size_t const& position);
+		constexpr Matrix<T, row, col>& 			operator=	(std::array<T, row*col>const& array);
+		constexpr Matrix<T, row, col>& 			operator=	(Matrix<T, row, col>const& mat);
 		constexpr Matrix<T, row, col> 	operator+=	(Matrix<T,row,col> const& mat); 
 		constexpr Matrix<T, row, col> 	operator-=	(Matrix<T,row,col> const& mat); 
 		constexpr Matrix<T, row, col> 	operator*=	(Matrix<T,row,col> const& mat); 
@@ -191,7 +191,7 @@ constexpr Matrix<T, row, rowB> Matrix<T, row, col>::dot(Matrix<T, col, rowB> con
 // ******************************************************************************
 //opertor overloading
 template<typename T, size_t row, size_t col>
-Matrix<T, row, col>& Matrix<T, row, col>::operator=(std::array<T, row*col>const& mat)
+constexpr Matrix<T, row, col>& Matrix<T, row, col>::operator=(std::array<T, row*col>const& mat)
 {
 	auto jt = mat.cbegin();
 	for(auto it = begin(); it != end(); ++it, ++jt)
@@ -200,7 +200,7 @@ Matrix<T, row, col>& Matrix<T, row, col>::operator=(std::array<T, row*col>const&
 }
 
 template<typename T, size_t row, size_t col>
-Matrix<T, row, col>& Matrix<T, row, col>::operator=(Matrix<T, row, col>const& mat)
+constexpr Matrix<T, row, col>& Matrix<T, row, col>::operator=(Matrix<T, row, col>const& mat)
 {
 	auto jt = mat.cbegin();
 	for(auto it = begin(); it != end(); ++it, ++jt)
