@@ -17,7 +17,7 @@ class Matrix
 		size_t _row, _col;
 		size_t _size;
 		std::array<T, row*col> _matrix;
-		std::size_t  _getPos(std::size_t r, std::size_t c) const; //matrix position
+		std::size_t  _getPos(std::size_t const& r, std::size_t const& c) const; //matrix position
 		T const get(std::size_t r, std::size_t c) const;
 		T const get(std::size_t r) const;
 		void 	set(T value, std::size_t r, std::size_t c);
@@ -41,7 +41,7 @@ class Matrix
 		auto rbegin() 	{return _matrix.rbegin();}
 		auto rend()	 	{return _matrix.rend();}
 		//accesseur
-		const T at(size_t r, size_t c)const { return _getPos(r, c);}
+		const T at(std::size_t const& r, std::size_t const& c)const { return _matrix.at(_getPos(r, c));}
 		//operator overloading
 		Matrix<T, row, col> operator+=(Matrix<T,row,col> const& mat); 
 		Matrix<T, row, col> operator-=(Matrix<T,row,col> const& mat); 
@@ -88,6 +88,7 @@ Matrix<T, row, col>::Matrix(Matrix<T, row, col>const& x):Matrix{}
 template<typename T, size_t row, size_t col>
 Matrix<T, row, col>::Matrix(Matrix<T, col, row>const& x):Matrix{}
 {
+	x.print();
 	for(size_t i=0; i < row; i++)
 	{	
 		for(size_t j=0; j < col; ++j)
@@ -101,9 +102,9 @@ Matrix<T, row, col>::Matrix(Matrix<T, col, row>const& x):Matrix{}
 // ******************************************************************************
 //get the position
 template<typename T, size_t row, size_t col>
-std::size_t Matrix<T,row,col>::_getPos(std::size_t x, std::size_t y) const
+std::size_t Matrix<T,row,col>::_getPos(std::size_t const& r, std::size_t const& c) const
 {
-	return x*col + y;
+	return r*col + c;
 }
 
 // ******************************************************************************
@@ -127,13 +128,13 @@ template<typename T, size_t row, size_t col>
 T const Matrix<T, row, col>::get(std::size_t r, std::size_t c) const
 {
 	assert(r < _row && c < _col);
-	return _matrix[_getPos(r,c)];
+	return _matrix.at(_getPos(r,c));
 }
 template<typename T, size_t row, size_t col>
 T const Matrix<T, row, col>::get(std::size_t x) const
 {
 	assert(x<_matrix.size());
-	return _matrix[x];
+	return _matrix.at(x);
 }
 template<typename T, size_t row, size_t col>
 void Matrix<T, row,col>::set(T value, std::size_t r, std::size_t c)
@@ -143,7 +144,7 @@ void Matrix<T, row,col>::set(T value, std::size_t r, std::size_t c)
 template<typename T, size_t row, size_t col>
 void Matrix<T, row,col>::set(T value, std::size_t x)
 {
-	_matrix[_getPos(x)] = value;
+	_matrix[x] = value;
 }
 
 // ******************************************************************************
