@@ -1,5 +1,5 @@
 test: main.cpp
-	g++-11 $^ -std=c++17 -Wall -o $@
+	g++ $^ -Og -g -std=c++17 -Wall -Wextra -Wpedantic -Wconversion -o $@
 
 all: test
 

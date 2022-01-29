@@ -54,8 +54,8 @@ int main()
 	auto matrix4 = matrix.Tr();
 	matrix4.print();
 	std::cout<<"tranposing \n";
-	matrix4.Tr_();
-	matrix4.print();
+	//matrix4.Tr_();
+	//matrix4.print();
 
 	return 0;
 }
