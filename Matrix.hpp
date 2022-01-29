@@ -8,6 +8,8 @@
 
 #include <cassert>
 #include <ostream>
+#include <iterator>
+#include <cstddef>
 
 namespace Matrix
 {
@@ -34,6 +36,35 @@ namespace Matrix
 					_arr[i] = val;
 			}
 			~Matrix(){delete[] _arr;}
+		
+		//iterator
+			//iterator class
+		struct Iterator
+		{
+			using iterator_category = std::forward_iterator_tag;
+			using difference_type 	= std::ptrdiff_t;
+			using value_type 		= T;
+			using pointer 			= T*;
+			using reference 		= T&;
+
+			Iterator(pointer ptr):m_ptr{ptr} {}
+
+			reference operator*(){return *m_ptr;}
+			pointer operator->(){return m_ptr;}
+
+			Iterator& operator++(){m_ptr++; return *this;}							//prefix increment
+			Iterator  operator++(int){Iterator tmp = *this; ++(*this); return tmp;}	//postfix increment
+
+			friend bool operator==(const Iterator& a, const Iterator& b) { return a.m_ptr == b.m_ptr;}
+			friend bool operator!=(const Iterator& a, const Iterator& b) { return a.m_ptr != b.m_ptr;}
+
+			private:
+			pointer m_ptr;
+
+		};
+			//iterator func
+		Iterator begin() {return Iterator{_arr};}
+		Iterator end() {return Iterator{_arr+_size};}
 		//utils func
 			void print();
 			T const get(size_t const& x, size_t const& y) const;
