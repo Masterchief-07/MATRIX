@@ -4,16 +4,19 @@
 int main()
 {
 	std::cout<<"begin \n";
-	const size_t X=5, Y=3;
+	//const size_t X=5, Y=3;
 	Matrix::Matrix<double> matrix{10,2, 4.f};
-	Matrix::Matrix<double> matrix2{2,10, 3.f};
 	matrix.print();
-	matrix2.print();
 
-	/*
+	std::cout<<"test equality\n";
+	Matrix::Matrix<double> matrix2{10,2, 4.f};
+	bool t = matrix == matrix2;
+	std::cout << t << "\n";
+
 	std::cout<<"add \n";
 	matrix+=matrix2;
 	matrix.print();
+
 	std::cout<<"subst \n";
 	matrix-=matrix2;
 	matrix.print();
@@ -24,6 +27,7 @@ int main()
 	matrix/=matrix2;
 	matrix.print();
 	
+	/*
 	std::cout<<"op2 add: \n";
 	auto matrix3 = matrix + matrix2;
 	matrix3.print();
