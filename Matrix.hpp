@@ -15,13 +15,15 @@ namespace MATRIX
 class Matrix
 {
 	private:
+		//private Var
 		size_t _row, _col;
 		size_t _size;
 		std::array<T, row*col> _matrix;
-		std::size_t  _getPos(std::size_t const& r, std::size_t const& c) const; //matrix position
-		constexpr T const get(std::size_t r, std::size_t c) const;
-		constexpr T const get(std::size_t r) const;
-		constexpr void 	set(T value, std::size_t x);
+		//private funct
+		std::size_t  		_getPos(std::size_t const& r, std::size_t const& c) const; //matrix position
+		constexpr T const 	get(std::size_t r, std::size_t c) const;
+		constexpr T const 	get(std::size_t r) const;
+		constexpr void 		set(T value, std::size_t x);
 	
 	public:
 		constexpr Matrix();
@@ -37,36 +39,36 @@ class Matrix
 		//transposition
 		constexpr Matrix<T, col, row> Tr();
 		//ITERATOR
-		constexpr auto begin() 	{return _matrix.begin();}
-		constexpr auto end()	 	{return _matrix.end();}
-		constexpr auto cbegin()	const {return _matrix.cbegin();}
-		constexpr auto cend()	 	const {return _matrix.cend();}
-		constexpr auto rbegin() 	{return _matrix.rbegin();}
-		constexpr auto rend()	 	{return _matrix.rend();}
+		constexpr auto begin() 			{return _matrix.begin();}
+		constexpr auto end()	 		{return _matrix.end();}
+		constexpr auto cbegin()	const 	{return _matrix.cbegin();}
+		constexpr auto cend()	const 	{return _matrix.cend();}
+		constexpr auto rbegin()			{return _matrix.rbegin();}
+		constexpr auto rend()	 		{return _matrix.rend();}
 		//accesseur
-		constexpr const T at(std::size_t const& r, std::size_t const& c)const { return _matrix.at(_getPos(r, c));}
-		constexpr void 	set(T value, std::size_t r, std::size_t c);
+		constexpr const T 	at(std::size_t const& r, std::size_t const& c)const { return _matrix.at(_getPos(r, c));}
+		constexpr void 		set(T value, std::size_t r, std::size_t c);
 		//operator overloading
-		std::array<T, col> 		operator[](size_t po);
-		Matrix<T, row, col>& operator=(std::array<T, row*col>const& array);
-		Matrix<T, row, col>& operator=(Matrix<T, row, col>const& mat);
-		constexpr Matrix<T, row, col> operator+=(Matrix<T,row,col> const& mat); 
-		constexpr Matrix<T, row, col> operator-=(Matrix<T,row,col> const& mat); 
-		constexpr Matrix<T, row, col> operator*=(Matrix<T,row,col> const& mat); 
-		constexpr Matrix<T, row, col> operator/=(Matrix<T,row,col> const& mat);
-		friend Matrix<T, row, col> operator+(Matrix<T,row,col> mat, Matrix<T,row,col> const& mat2){ mat+=mat2; return mat;}
-		friend Matrix<T, row, col> operator-(Matrix<T,row,col> mat, Matrix<T,row,col> const& mat2){ mat-=mat2; return mat;}
-		friend Matrix<T, row, col> operator*(Matrix<T,row,col> mat, Matrix<T,row,col> const& mat2){ mat*=mat2; return mat;}
-		friend Matrix<T, row, col> operator/(Matrix<T,row,col> mat, Matrix<T,row,col> const& mat2){ mat/=mat2; return mat;}
+		std::array<T, col> 				operator[](size_t po);
+		Matrix<T, row, col>& 			operator=(std::array<T, row*col>const& array);
+		Matrix<T, row, col>& 			operator=(Matrix<T, row, col>const& mat);
+		constexpr Matrix<T, row, col> 	operator+=(Matrix<T,row,col> const& mat); 
+		constexpr Matrix<T, row, col> 	operator-=(Matrix<T,row,col> const& mat); 
+		constexpr Matrix<T, row, col> 	operator*=(Matrix<T,row,col> const& mat); 
+		constexpr Matrix<T, row, col> 	operator/=(Matrix<T,row,col> const& mat);
+		friend Matrix<T, row, col> 		operator+(Matrix<T,row,col> mat, Matrix<T,row,col> const& mat2){ mat+=mat2; return mat;}
+		friend Matrix<T, row, col> 		operator-(Matrix<T,row,col> mat, Matrix<T,row,col> const& mat2){ mat-=mat2; return mat;}
+		friend Matrix<T, row, col> 		operator*(Matrix<T,row,col> mat, Matrix<T,row,col> const& mat2){ mat*=mat2; return mat;}
+		friend Matrix<T, row, col> 		operator/(Matrix<T,row,col> mat, Matrix<T,row,col> const& mat2){ mat/=mat2; return mat;}
 		//operator overloading with value
-		constexpr Matrix<T, row, col> operator+=(T value);
-		constexpr Matrix<T, row, col> operator-=(T value);
-		constexpr Matrix<T, row, col> operator*=(T value);
-		constexpr Matrix<T, row, col> operator/=(T value);
-		friend Matrix<T, row, col> operator+(Matrix<T,row,col> mat, T value){ mat+=value; return mat;}
-		friend Matrix<T, row, col> operator-(Matrix<T,row,col> mat, T value){ mat-=value; return mat;}
-		friend Matrix<T, row, col> operator*(Matrix<T,row,col> mat, T value){ mat*=value; return mat;}
-		friend Matrix<T, row, col> operator/(Matrix<T,row,col> mat, T value){ mat/=value; return mat;}
+		constexpr Matrix<T, row, col> 	operator+=(T value);
+		constexpr Matrix<T, row, col> 	operator-=(T value);
+		constexpr Matrix<T, row, col> 	operator*=(T value);
+		constexpr Matrix<T, row, col> 	operator/=(T value);
+		friend Matrix<T, row, col> 		operator+(Matrix<T,row,col> mat, T value){ mat+=value; return mat;}
+		friend Matrix<T, row, col> 		operator-(Matrix<T,row,col> mat, T value){ mat-=value; return mat;}
+		friend Matrix<T, row, col> 		operator*(Matrix<T,row,col> mat, T value){ mat*=value; return mat;}
+		friend Matrix<T, row, col> 		operator/(Matrix<T,row,col> mat, T value){ mat/=value; return mat;}
 };
 // ******************************************************************************
 //constructor
