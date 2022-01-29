@@ -104,7 +104,6 @@ namespace Matrix
 			Matrix<T>* operator/=(Matrix<T> const& a);
 			Matrix<T>* operator*=(Matrix<T> const& a);
 
-			Matrix<T> operator+(Matrix<T> const& a, Matrix<T> const& b);
 			//Matrix<T> operator-(Matrix<T>& a, Matrix<T>& b);
 			//Matrix<T> operator*(Matrix<T>& a, Matrix<T>& b);
 			//Matrix<T> operator/(Matrix<T>& a, Matrix<T>& b);
@@ -207,5 +206,12 @@ namespace Matrix
 			*it *= *jt;
 		}
 		return this;
+	}
+	template<typename T>
+	Matrix<T> Matrix<T>::operator+(Matrix<T> const& a, Matrix<T> const& b)
+	{
+		Matrix<T> cop(a);
+		cop += b;
+		return cop;
 	}
 };
