@@ -5,11 +5,12 @@ int main()
 {
 	std::cout<<"begin \n";
 	const size_t X=5, Y=3;
-	Matrix<double, X, Y> matrix{2.f};
-	Matrix<double, X, Y> matrix2{3.f};
+	Matrix::Matrix<double> matrix{10,2, 4.f};
+	Matrix::Matrix<double> matrix2{2,10, 3.f};
 	matrix.print();
 	matrix2.print();
 
+	/*
 	std::cout<<"add \n";
 	matrix+=matrix2;
 	matrix.print();
@@ -56,6 +57,6 @@ int main()
 	std::cout<<"tranposing \n";
 	matrix4.Tr_();
 	matrix4.print();
-
+	*/
 	return 0;
 }

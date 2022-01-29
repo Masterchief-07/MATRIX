@@ -1,0 +1,5 @@
+make --dry-run --always-make --keep-going --print-directory
+make: Entering directory `/Users/jonathan/PROGRAMMING/WEEKPROJECT/MATRIX'
+g++-11 main.cpp -std=c++17 -Wall -o test
+make: Leaving directory `/Users/jonathan/PROGRAMMING/WEEKPROJECT/MATRIX'
+ 
