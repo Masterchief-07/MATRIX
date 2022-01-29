@@ -54,9 +54,16 @@ int main()
 	auto matrix4 = matrix.Tr();
 	matrix4.print();
 
-	auto matrix5 = matrix.dot(matrix4);
+	std::cout<<"array init\n";
+	Matrix<double, 2,4> matrix5 = {{1,2,3,4,6,7,8,9}};
+	Matrix<double, 4,1> matrix6{{5,6,7,8}};
 	matrix5.print();
-	
+	matrix6.print();
+
+	std::cout<<"dot product\n";
+	auto matrix7 = matrix5.dot(matrix6);
+	matrix7.print();
+
 
 	return 0;
 }

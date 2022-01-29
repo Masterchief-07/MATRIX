@@ -18,49 +18,50 @@ class Matrix
 		size_t _size;
 		std::array<T, row*col> _matrix;
 		std::size_t  _getPos(std::size_t const& r, std::size_t const& c) const; //matrix position
-		T const get(std::size_t r, std::size_t c) const;
-		T const get(std::size_t r) const;
-		void 	set(T value, std::size_t x);
+		constexpr T const get(std::size_t r, std::size_t c) const;
+		constexpr T const get(std::size_t r) const;
+		constexpr void 	set(T value, std::size_t x);
+	
 	public:
-		Matrix();
-		Matrix(T x);
-		Matrix(Matrix<T, row, col>const& x);
-		Matrix(std::array<T> const& x);
-		template <size_t x>
-		Matrix(Matrix<T, x, x>const& a);
+		constexpr Matrix();
+		constexpr Matrix(T x);
+		constexpr Matrix(Matrix<T, row, col>const& x);
+		constexpr Matrix(std::array<T, row*col> const& x);
 		~Matrix();
 		//print the matrix
 		void print() const;
 		//dot product
 		template<size_t rowB>
-		Matrix<T, row, rowB> dot(Matrix<T, col, rowB> const& x);
+		constexpr Matrix<T, row, rowB> dot(Matrix<T, col, rowB> const& x);
 		//transposition
-		Matrix<T, col, row> Tr();
+		constexpr Matrix<T, col, row> Tr();
 		//ITERATOR
-		auto begin() 	{return _matrix.begin();}
-		auto end()	 	{return _matrix.end();}
-		auto cbegin()	const {return _matrix.cbegin();}
-		auto cend()	 	const {return _matrix.cend();}
-		auto rbegin() 	{return _matrix.rbegin();}
-		auto rend()	 	{return _matrix.rend();}
+		constexpr auto begin() 	{return _matrix.begin();}
+		constexpr auto end()	 	{return _matrix.end();}
+		constexpr auto cbegin()	const {return _matrix.cbegin();}
+		constexpr auto cend()	 	const {return _matrix.cend();}
+		constexpr auto rbegin() 	{return _matrix.rbegin();}
+		constexpr auto rend()	 	{return _matrix.rend();}
 		//accesseur
-		const T at(std::size_t const& r, std::size_t const& c)const { return _matrix.at(_getPos(r, c));}
-		void 	set(T value, std::size_t r, std::size_t c);
+		constexpr const T at(std::size_t const& r, std::size_t const& c)const { return _matrix.at(_getPos(r, c));}
+		constexpr void 	set(T value, std::size_t r, std::size_t c);
 		//operator overloading
 		std::array<T, col> 		operator[](size_t po);
-		Matrix<T, row, col> operator+=(Matrix<T,row,col> const& mat); 
-		Matrix<T, row, col> operator-=(Matrix<T,row,col> const& mat); 
-		Matrix<T, row, col> operator*=(Matrix<T,row,col> const& mat); 
-		Matrix<T, row, col> operator/=(Matrix<T,row,col> const& mat);
+		Matrix<T, row, col>& operator=(std::array<T, row*col>const& array);
+		Matrix<T, row, col>& operator=(Matrix<T, row, col>const& mat);
+		constexpr Matrix<T, row, col> operator+=(Matrix<T,row,col> const& mat); 
+		constexpr Matrix<T, row, col> operator-=(Matrix<T,row,col> const& mat); 
+		constexpr Matrix<T, row, col> operator*=(Matrix<T,row,col> const& mat); 
+		constexpr Matrix<T, row, col> operator/=(Matrix<T,row,col> const& mat);
 		friend Matrix<T, row, col> operator+(Matrix<T,row,col> mat, Matrix<T,row,col> const& mat2){ mat+=mat2; return mat;}
 		friend Matrix<T, row, col> operator-(Matrix<T,row,col> mat, Matrix<T,row,col> const& mat2){ mat-=mat2; return mat;}
 		friend Matrix<T, row, col> operator*(Matrix<T,row,col> mat, Matrix<T,row,col> const& mat2){ mat*=mat2; return mat;}
 		friend Matrix<T, row, col> operator/(Matrix<T,row,col> mat, Matrix<T,row,col> const& mat2){ mat/=mat2; return mat;}
 		//operator overloading with value
-		Matrix<T, row, col> operator+=(T value);
-		Matrix<T, row, col> operator-=(T value);
-		Matrix<T, row, col> operator*=(T value);
-		Matrix<T, row, col> operator/=(T value);
+		constexpr Matrix<T, row, col> operator+=(T value);
+		constexpr Matrix<T, row, col> operator-=(T value);
+		constexpr Matrix<T, row, col> operator*=(T value);
+		constexpr Matrix<T, row, col> operator/=(T value);
 		friend Matrix<T, row, col> operator+(Matrix<T,row,col> mat, T value){ mat+=value; return mat;}
 		friend Matrix<T, row, col> operator-(Matrix<T,row,col> mat, T value){ mat-=value; return mat;}
 		friend Matrix<T, row, col> operator*(Matrix<T,row,col> mat, T value){ mat*=value; return mat;}
@@ -70,11 +71,11 @@ class Matrix
 // ******************************************************************************
 //constructor
 template<typename T, size_t row, size_t col>
-Matrix<T,row,col>::Matrix():_row(row), _col(col),_size{row*col}
+constexpr Matrix<T,row,col>::Matrix():_row(row), _col(col),_size{row*col}
 {}
 
 template<typename T, size_t row, size_t col>
-Matrix<T,row,col>::Matrix(T x):Matrix{}
+constexpr Matrix<T,row,col>::Matrix(T x):Matrix{}
 {	
 	_matrix.fill(x);
 }
@@ -82,7 +83,7 @@ template<typename T, size_t row, size_t col>
 Matrix<T,row,col>::~Matrix()
 {}
 template<typename T, size_t row, size_t col>
-Matrix<T, row, col>::Matrix(Matrix<T, row, col>const& x):Matrix{}
+constexpr Matrix<T, row, col>::Matrix(Matrix<T, row, col>const& x):Matrix{}
 {
 	auto jt = x.cbegin();
 	for(auto it = begin(); it!= end(); ++it, ++jt)
@@ -90,19 +91,13 @@ Matrix<T, row, col>::Matrix(Matrix<T, row, col>const& x):Matrix{}
 		*it = *jt;
 	}
 }
-
 template<typename T, size_t row, size_t col>
-template<size_t a>
-Matrix<T, row, col>::Matrix(Matrix<T, a, a>const& x):_row(a),_col(a),_size{a*a}
+constexpr Matrix<T, row, col>::Matrix(std::array<T, row*col> const& x):Matrix{}
 {
-	x.print();
-	for(size_t i=0; i < row; i++)
-	{	
-		for(size_t j=0; j < col; ++j)
-		{
-			set(x.at(j,i), i, j);
-		}
-
+	auto jt = x.begin();
+	for(auto it = begin(); it != end(); ++it, ++jt)
+	{
+		*it = *jt;
 	}
 }
 
@@ -132,24 +127,24 @@ void Matrix<T,row,col>::print() const
 // ******************************************************************************
 //getter setter
 template<typename T, size_t row, size_t col>
-T const Matrix<T, row, col>::get(std::size_t r, std::size_t c) const
+constexpr T const Matrix<T, row, col>::get(std::size_t r, std::size_t c) const
 {
 	assert(r < _row && c < _col);
 	return _matrix.at(_getPos(r,c));
 }
 template<typename T, size_t row, size_t col>
-T const Matrix<T, row, col>::get(std::size_t x) const
+constexpr T const Matrix<T, row, col>::get(std::size_t x) const
 {
 	assert(x<_matrix.size());
 	return _matrix.at(x);
 }
 template<typename T, size_t row, size_t col>
-void Matrix<T, row,col>::set(T value, std::size_t r, std::size_t c)
+constexpr void Matrix<T, row,col>::set(T value, std::size_t r, std::size_t c)
 {
 	_matrix[_getPos(r,c)] = value;
 }
 template<typename T, size_t row, size_t col>
-void Matrix<T, row,col>::set(T value, std::size_t x)
+constexpr void Matrix<T, row,col>::set(T value, std::size_t x)
 {
 	_matrix[x] = value;
 }
@@ -157,14 +152,14 @@ void Matrix<T, row,col>::set(T value, std::size_t x)
 // ******************************************************************************
 //transposing
 template<typename T, size_t row, size_t col>
-Matrix<T, col, row> Matrix<T, row, col>::Tr()
+constexpr Matrix<T, col, row> Matrix<T, row, col>::Tr()
 {
 	Matrix<T, col, row> mat{};
 	for(size_t i = 0;  i < col; ++i)
 	{
 		for(size_t j = 0; j < row; ++j)
 		{
-			mat.set(get(j,i),i,j);
+			mat.set(at(j,i),i,j);
 		}
 	}
 	return mat;
@@ -173,7 +168,7 @@ Matrix<T, col, row> Matrix<T, row, col>::Tr()
 //Dot product
 template<typename T, size_t row, size_t col>
 template<size_t rowB>
-Matrix<T, row, rowB> Matrix<T, row, col>::dot(Matrix<T, col, rowB> const& x)
+constexpr Matrix<T, row, rowB> Matrix<T, row, col>::dot(Matrix<T, col, rowB> const& x)
 {
 	Matrix<T, row, rowB> mat;
 	for(size_t i = 0;  i < row; ++i)
@@ -194,7 +189,25 @@ Matrix<T, row, rowB> Matrix<T, row, col>::dot(Matrix<T, col, rowB> const& x)
 // ******************************************************************************
 //opertor overloading
 template<typename T, size_t row, size_t col>
-Matrix<T, row, col> Matrix<T, row, col>::operator+=(Matrix<T,row,col> const& mat)
+Matrix<T, row, col>& Matrix<T, row, col>::operator=(std::array<T, row*col>const& mat)
+{
+	auto jt = mat.cbegin();
+	for(auto it = begin(); it != end(); ++it, ++jt)
+		*it = *jt;
+	return *this;
+}
+
+template<typename T, size_t row, size_t col>
+Matrix<T, row, col>& Matrix<T, row, col>::operator=(Matrix<T, row, col>const& mat)
+{
+	auto jt = mat.cbegin();
+	for(auto it = begin(); it != end(); ++it, ++jt)
+		*it = *jt;
+	return *this;
+}
+
+template<typename T, size_t row, size_t col>
+constexpr Matrix<T, row, col> Matrix<T, row, col>::operator+=(Matrix<T,row,col> const& mat)
 {
 	for(std::size_t i = 0; i < _matrix.size(); i++)
 		_matrix[i] += mat.get(i);
@@ -202,7 +215,7 @@ Matrix<T, row, col> Matrix<T, row, col>::operator+=(Matrix<T,row,col> const& mat
 	return *this;
 }	
 template<typename T, size_t row, size_t col>
-Matrix<T, row, col> Matrix<T, row, col>::operator-=(Matrix<T,row,col> const& mat)
+constexpr Matrix<T, row, col> Matrix<T, row, col>::operator-=(Matrix<T,row,col> const& mat)
 {
 	for(std::size_t i = 0; i < _matrix.size(); i++)
 		_matrix[i] -= mat.get(i);
@@ -210,7 +223,7 @@ Matrix<T, row, col> Matrix<T, row, col>::operator-=(Matrix<T,row,col> const& mat
 	return *this;
 }	
 template<typename T, size_t row, size_t col>
-Matrix<T, row, col> Matrix<T, row, col>::operator*=(Matrix<T,row,col> const& mat)
+constexpr Matrix<T, row, col> Matrix<T, row, col>::operator*=(Matrix<T,row,col> const& mat)
 {
 	for(std::size_t i = 0; i < _matrix.size(); i++)
 		_matrix[i] *= mat.get(i);
@@ -218,7 +231,7 @@ Matrix<T, row, col> Matrix<T, row, col>::operator*=(Matrix<T,row,col> const& mat
 	return *this;
 }	
 template<typename T, size_t row, size_t col>
-Matrix<T, row, col> Matrix<T, row, col>::operator/=(Matrix<T,row,col> const& mat)
+constexpr Matrix<T, row, col> Matrix<T, row, col>::operator/=(Matrix<T,row,col> const& mat)
 {
 	for(std::size_t i = 0; i < _matrix.size(); i++)
 		_matrix[i] /= mat.get(i);
@@ -229,28 +242,28 @@ Matrix<T, row, col> Matrix<T, row, col>::operator/=(Matrix<T,row,col> const& mat
 //operator overloading with value
 
 template<typename T, size_t row, size_t col>
-Matrix<T, row, col> Matrix<T, row,col>::operator+=(T value)
+constexpr Matrix<T, row, col> Matrix<T, row,col>::operator+=(T value)
 {
 	for(auto &i : _matrix)
 		i += value;
 	return *this;
 }
 template<typename T, size_t row, size_t col>
-Matrix<T, row, col> Matrix<T, row,col>::operator-=(T value)
+constexpr Matrix<T, row, col> Matrix<T, row,col>::operator-=(T value)
 {
 	for(auto &i : _matrix)
 		i -= value;
 	return *this;
 }	
 template<typename T, size_t row, size_t col>
-Matrix<T, row, col> Matrix<T, row,col>::operator*=(T value)
+constexpr Matrix<T, row, col> Matrix<T, row,col>::operator*=(T value)
 {
 	for(auto &i : _matrix)
 		i *= value;
 	return *this;
 }	
 template<typename T, size_t row, size_t col>
-Matrix<T, row, col> Matrix<T, row,col>::operator/=(T value)
+constexpr Matrix<T, row, col> Matrix<T, row,col>::operator/=(T value)
 {
 	for(auto &i : _matrix)
 		i /= value;
