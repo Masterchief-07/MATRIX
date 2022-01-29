@@ -49,9 +49,9 @@ class Matrix
 		constexpr const T 	at(std::size_t const& r, std::size_t const& c)const { return _matrix.at(_getPos(r, c));}
 		constexpr void 		set(T value, std::size_t r, std::size_t c);
 		//operator overloading
-		constexpr std::array<T, col> 				operator[]	(size_t const& position);
-		constexpr Matrix<T, row, col>& 			operator=	(std::array<T, row*col>const& array);
-		constexpr Matrix<T, row, col>& 			operator=	(Matrix<T, row, col>const& mat);
+		constexpr std::array<T, col> 	operator[]	(size_t const& position);
+		constexpr Matrix<T, row, col>& 	operator=	(std::array<T, row*col>const& array);
+		constexpr Matrix<T, row, col>& 	operator=	(Matrix<T, row, col>const& mat);
 		constexpr Matrix<T, row, col> 	operator+=	(Matrix<T,row,col> const& mat); 
 		constexpr Matrix<T, row, col> 	operator-=	(Matrix<T,row,col> const& mat); 
 		constexpr Matrix<T, row, col> 	operator*=	(Matrix<T,row,col> const& mat); 
