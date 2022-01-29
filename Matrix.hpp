@@ -20,19 +20,22 @@ class Matrix
 		std::size_t  _getPos(std::size_t const& r, std::size_t const& c) const; //matrix position
 		T const get(std::size_t r, std::size_t c) const;
 		T const get(std::size_t r) const;
-		void 	set(T value, std::size_t r, std::size_t c);
 		void 	set(T value, std::size_t x);
 	public:
 		Matrix();
 		Matrix(T x);
 		Matrix(Matrix<T, row, col>const& x);
-		Matrix(Matrix<T, col, row>const& x);
+		Matrix(std::array<T> const& x);
+		template <size_t x>
+		Matrix(Matrix<T, x, x>const& a);
 		~Matrix();
 		//print the matrix
 		void print() const;
+		//dot product
+		template<size_t rowB>
+		Matrix<T, row, rowB> dot(Matrix<T, col, rowB> const& x);
 		//transposition
 		Matrix<T, col, row> Tr();
-		void Tr_();
 		//ITERATOR
 		auto begin() 	{return _matrix.begin();}
 		auto end()	 	{return _matrix.end();}
@@ -42,7 +45,9 @@ class Matrix
 		auto rend()	 	{return _matrix.rend();}
 		//accesseur
 		const T at(std::size_t const& r, std::size_t const& c)const { return _matrix.at(_getPos(r, c));}
+		void 	set(T value, std::size_t r, std::size_t c);
 		//operator overloading
+		std::array<T, col> 		operator[](size_t po);
 		Matrix<T, row, col> operator+=(Matrix<T,row,col> const& mat); 
 		Matrix<T, row, col> operator-=(Matrix<T,row,col> const& mat); 
 		Matrix<T, row, col> operator*=(Matrix<T,row,col> const& mat); 
@@ -85,8 +90,10 @@ Matrix<T, row, col>::Matrix(Matrix<T, row, col>const& x):Matrix{}
 		*it = *jt;
 	}
 }
+
 template<typename T, size_t row, size_t col>
-Matrix<T, row, col>::Matrix(Matrix<T, col, row>const& x):Matrix{}
+template<size_t a>
+Matrix<T, row, col>::Matrix(Matrix<T, a, a>const& x):_row(a),_col(a),_size{a*a}
 {
 	x.print();
 	for(size_t i=0; i < row; i++)
@@ -152,18 +159,38 @@ void Matrix<T, row,col>::set(T value, std::size_t x)
 template<typename T, size_t row, size_t col>
 Matrix<T, col, row> Matrix<T, row, col>::Tr()
 {
-	Matrix<T, col, row> mat{*this};
-	//mat.T_();
-	//mat.Tr_();
+	Matrix<T, col, row> mat{};
+	for(size_t i = 0;  i < col; ++i)
+	{
+		for(size_t j = 0; j < row; ++j)
+		{
+			mat.set(get(j,i),i,j);
+		}
+	}
 	return mat;
 }
+// ******************************************************************************
+//Dot product
 template<typename T, size_t row, size_t col>
-void Matrix<T, row, col>::Tr_()
+template<size_t rowB>
+Matrix<T, row, rowB> Matrix<T, row, col>::dot(Matrix<T, col, rowB> const& x)
 {
-	size_t middle = _row;
-	_row = _col;
-	_col = middle;	
+	Matrix<T, row, rowB> mat;
+	for(size_t i = 0;  i < row; ++i)
+	{
+		for(size_t k = 0; k < rowB; ++k)
+		{
+			T sum = 0;
+			for(size_t j = 0; j < col; ++j)
+			{
+				sum += this->at(i,j) * x.at(j,k);
+			}
+			mat.set(sum, i, k);
+		}
+	}
+	return mat;
 }
+
 // ******************************************************************************
 //opertor overloading
 template<typename T, size_t row, size_t col>

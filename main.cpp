@@ -54,6 +54,8 @@ int main()
 	auto matrix4 = matrix.Tr();
 	matrix4.print();
 
+	auto matrix5 = matrix.dot(matrix4);
+	matrix5.print();
 	
 
 	return 0;
