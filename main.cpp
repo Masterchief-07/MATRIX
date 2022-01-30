@@ -66,9 +66,12 @@ int main()
 	auto matrix7 = matrix5.dot(matrix6);
 	matrix7.print();
 
-	std::cout<<"Norm: \n";
+	std::cout<<"Matrix8: \n";
 	Matrix<double, 3,3> matrix8 = {{1.f,2.f,3.f,4.f,5.f,6.f,7.f,8.f,9.f}};
 	matrix8.print();
+	auto shape = matrix8.shape();
+	std::cout<<"shape: "<<shape.first << " " << shape.second <<"\n";
+	std::cout<<"size: "<<matrix8.size()<<"\n";
 	std::cout<<"matrix8 norm: "<<matrix8.norm()<<"\n";
 
 	std::cout<<"min: "<<matrix8.min()<<"\n";
