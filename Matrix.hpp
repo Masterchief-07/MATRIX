@@ -226,7 +226,9 @@ constexpr Matrix<T, row, rowB> Matrix<T, row, col>::dot(Matrix<T, col, rowB> con
 template<typename T, size_t row, size_t col>
 constexpr T Matrix<T, row, col>::norm()
 {
-	T sum = this->sum();
+	T sum = 0;
+	for(auto const& i : _matrix)
+		sum+= i*i;
 	return static_cast<T>(std::sqrt(sum));
 }
 
