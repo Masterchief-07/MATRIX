@@ -66,6 +66,20 @@ int main()
 	auto matrix7 = matrix5.dot(matrix6);
 	matrix7.print();
 
+	std::cout<<"Norm: \n";
+	Matrix<double, 3,3> matrix8 = {{1.f,2.f,3.f,4.f,5.f,6.f,7.f,8.f,9.f}};
+	matrix8.print();
+	std::cout<<"matrix8 norm: "<<matrix8.norm()<<"\n";
+
+	std::cout<<"min: "<<matrix8.min()<<"\n";
+	std::cout<<"max: "<<matrix8.max()<<"\n";
+	std::cout<<"mean: "<<matrix8.mean()<<"\n";
+	std::cout<<"sum: "<<matrix8.sum()<<"\n";
+	auto argmin = matrix8.argMin();
+	auto argmax = matrix8.argMax();
+	std::cout<<"argmin x: "<<argmin.first<<" y: "<<argmin.second<<" \n";
+	std::cout<<"argmax x: "<<argmax.first<<" y: "<<argmax.second<<" \n";
+
 
 	return 0;
 }

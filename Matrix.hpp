@@ -8,6 +8,7 @@
 #include <iostream>
 #include <cassert>
 #include <array>
+#include <cmath>
 
 namespace MATRIX
 {
@@ -24,6 +25,8 @@ class Matrix
 		constexpr T const 	get(std::size_t r, std::size_t c) const;
 		constexpr T const 	get(std::size_t r) const;
 		constexpr void 		set(T value, std::size_t x);
+		constexpr std::pair<size_t, size_t> _getXY(T const * element) const;
+		constexpr std::pair<size_t, size_t> _getXY(size_t const& index) const;
 	
 	public:
 		constexpr Matrix();
@@ -33,11 +36,27 @@ class Matrix
 		~Matrix();
 		//print the matrix
 		void print() const;
+		//matrix shape
+		constexpr std::pair<size_t ,size_t> shape() {return std::pair<size_t, size_t>{_row, _col};}
+		//matrix size
+		constexpr size_t size() {return _size;}
 		//dot product
 		template<size_t rowB>
 		constexpr Matrix<T, row, rowB> dot(Matrix<T, col, rowB> const& x);
 		//transposition
 		constexpr Matrix<T, col, row> Tr();
+		//euclidean Norm
+		constexpr T norm();
+		//max, min, mean, sum
+		constexpr T max();
+		constexpr T min();
+		constexpr T mean();
+		constexpr T sum();
+		//argmin argmax
+		constexpr std::pair<size_t ,size_t> argMax();
+		constexpr std::pair<size_t ,size_t> argMin();
+		//fill
+		constexpr void fill(T const& value) {_matrix.fill(value);}
 		//ITERATOR
 		constexpr auto begin() 			{return _matrix.begin();}
 		constexpr auto end()	 		{return _matrix.end();}
@@ -129,6 +148,19 @@ void Matrix<T,row,col>::print() const
 // ******************************************************************************
 //getter setter
 template<typename T, size_t row, size_t col>
+constexpr std::pair<size_t, size_t> Matrix<T, row, col>::_getXY(T const * element) const
+{
+	auto dist = static_cast<size_t>(std::distance(_matrix.begin(), element));
+	return _getXY(dist);
+}
+template<typename T, size_t row, size_t col>
+constexpr std::pair<size_t, size_t> Matrix<T, row, col>::_getXY(size_t const& index) const
+{
+	size_t x = index/_col;
+	size_t y = index - x*_col;
+	return std::pair<size_t, size_t>{x,y};
+}
+template<typename T, size_t row, size_t col>
 constexpr T const Matrix<T, row, col>::get(std::size_t r, std::size_t c) const
 {
 	assert(r < _row && c < _col);
@@ -150,6 +182,7 @@ constexpr void Matrix<T, row,col>::set(T value, std::size_t x)
 {
 	_matrix[x] = value;
 }
+
 
 // ******************************************************************************
 //transposing
@@ -186,6 +219,58 @@ constexpr Matrix<T, row, rowB> Matrix<T, row, col>::dot(Matrix<T, col, rowB> con
 		}
 	}
 	return mat;
+}
+
+// ******************************************************************************
+//euclidean Norm
+template<typename T, size_t row, size_t col>
+constexpr T Matrix<T, row, col>::norm()
+{
+	T sum = this->sum();
+	return static_cast<T>(std::sqrt(sum));
+}
+
+// ******************************************************************************
+//MAX, MIN, MEAN
+template<typename T, size_t row, size_t col>
+constexpr T Matrix<T, row, col>::max()
+{
+	auto it = std::max_element(_matrix.begin(), _matrix.end());
+	return *it;
+}
+template<typename T, size_t row, size_t col>
+constexpr T Matrix<T, row, col>::min()
+{
+	auto it = std::min_element(_matrix.begin(), _matrix.end());
+	return *it;
+}
+template<typename T, size_t row, size_t col>
+constexpr T Matrix<T, row, col>::mean()
+{
+	T sum = this->sum();
+	return sum/float(_size);
+}
+template<typename T, size_t row, size_t col>
+constexpr T Matrix<T, row, col>::sum()
+{
+	T sum = 0;
+	for(auto const& i:_matrix)
+		sum += i;
+	return sum;
+}
+// ******************************************************************************
+//ARGMAX, ARGMIN
+template<typename T, size_t row, size_t col>
+constexpr std::pair<size_t ,size_t> Matrix<T, row, col>::argMax()
+{
+	auto it = std::max_element(_matrix.begin(), _matrix.end());
+	return _getXY(it);
+}
+template<typename T, size_t row, size_t col>
+constexpr std::pair<size_t ,size_t> Matrix<T, row, col>::argMin()
+{
+	auto it = std::min_element(_matrix.begin(), _matrix.end());
+	return _getXY(it);
 }
 
 // ******************************************************************************
