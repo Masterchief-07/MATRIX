@@ -1,5 +1,0 @@
-make --dry-run --always-make --keep-going --print-directory
-make: Entering directory `/Users/jonathan/PROGRAMMING/WEEKPROJECT/MATRIX'
-g++ main.cpp -Og -g -std=c++17 -Wall -Wextra -Wpedantic -Wconversion -o test
-make: Leaving directory `/Users/jonathan/PROGRAMMING/WEEKPROJECT/MATRIX'
- 
