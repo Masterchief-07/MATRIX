@@ -4,3 +4,4 @@ namespace matrix
     class AbstractMatrix{
 
     };
+}
