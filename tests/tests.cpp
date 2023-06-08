@@ -1,27 +1,28 @@
 #include <catch2/catch_test_macros.hpp>
 // #include <catch2/benchmark/catch_benchmark.hpp>
-#include <matrix.hpp>
+#include <matrix1d.hpp>
 // #include <linear.hpp>
 
 TEST_CASE("test Vector", "[VECTOR]") {
 
-    krain::Vector<double> myVect{{1,2,3,4,5,6,7,8,9}};
-    krain::Vector<double> myVect2{{1,2,3,4,5,6,7,8,9}};
-    krain::Vector<double> myVect3{{0,1,2,3,4,5,6,7,8}};
+    matrix::Matrix1D<double> myVect{{1,2,3,4,5,6,7,8,9}};
+    matrix::Matrix1D<double> myVect2{{1,2,3,4,5,6,7,8,9}};
+    matrix::Matrix1D<double> result{{1,4,9,16,25,36,49,64,81}};
+    matrix::Matrix1D<double> myVect3{{0,1,2,3,4,5,6,7,8}};
     REQUIRE(myVect.size() == 9);
     REQUIRE(myVect[0] == 1);
     REQUIRE(myVect[myVect.size()-1] == 9);
     REQUIRE(myVect == myVect2);
     REQUIRE(myVect != myVect3);
-    // REQUIRE(myVect.dot(myVect2) == )
-
-    // REQUIRE(myVect.normalize().sum() == 1.0);
+    REQUIRE(myVect.dot(myVect2) == result.sum());
+    REQUIRE(myVect.normalize().norm() == 1.0);
+    REQUIRE(myVect.norm() == std::sqrt(result.sum()));
 }
 
 TEST_CASE("TEST VECTOR ON VECTOR", "[VECTOR ON VECTOR]")
 {
-    krain::Vector<double> myVect{{1,2,3,4,5,6,7,8,9}};
-    krain::Vector<double> myVect2{{1,2,3,4,5,6,7,8,9}};
+    matrix::Matrix1D<double> myVect{{1,2,3,4,5,6,7,8,9}};
+    matrix::Matrix1D<double> myVect2{{1,2,3,4,5,6,7,8,9}};
     myVect+=myVect2;
     for (size_t i=0; i<myVect.size(); i++)
     {
@@ -67,7 +68,7 @@ TEST_CASE("TEST VECTOR ON VECTOR", "[VECTOR ON VECTOR]")
 
 TEST_CASE("TEST VECTOR ON SCALAR", "[VECTOR ON SCALAR]")
 {
-    krain::Vector<double> myVect{{1,2,3,4,5,6,7,8,9}};
+    matrix::Matrix1D<double> myVect{{1,2,3,4,5,6,7,8,9}};
     myVect+=3;
     for (size_t i=0; i<myVect.size(); i++)
     {
