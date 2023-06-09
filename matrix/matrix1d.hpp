@@ -21,6 +21,8 @@ namespace matrix
         }
 
         public:
+        Matrix1D(size_t size):m_data(size, 0){}
+        Matrix1D(size_t size, const T& data):m_data(size, data){}
         Matrix1D(const std::vector<T>& data):m_data{data}
         {
 
@@ -64,6 +66,15 @@ namespace matrix
             for(const auto& x: this->m_data)
                 result += x;
             return result;
+        }
+
+        std::vector<T>& getRawData()
+        {
+            return m_data;
+        }
+        std::vector<T> getRawData() const
+        {
+            return m_data;
         }
         //-------------------------------------------------------------------------------------------------------
         T& operator[](size_t index)
@@ -141,11 +152,11 @@ namespace matrix
             }
             return *this;
         }
-        Matrix1D<T>& operator^(double i)
+        Matrix1D<T>& operator^(double value)
         {
             for(size_t i=0; i < this->size(); i++)
             {
-                (*this)[i] = std::pow((*this)[i], i);
+                (*this)[i] = std::pow((*this)[i], value);
             }
         }
         //-------------------------------------------------------------------------------------------------------
@@ -221,6 +232,19 @@ namespace matrix
         {
             return !(*this==a);
         }
-       
+        //-----------------------OSTREAM------------------
+        friend std::ostream& operator<<(std::ostream& os, const Matrix1D<T>& obj)
+        {
+            os << "[";
+            for(size_t i=0; i<obj.size(); i++)
+            {
+                os<<obj[i];
+                if (i<obj.size()-1)
+                    os<<", ";
+            }
+            os << "]";
+            return os;
+        }
+
     };
 }
