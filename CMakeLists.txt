@@ -19,18 +19,6 @@ add_executable(${PROJECT_NAME} main.cpp)
 target_include_directories(${PROJECT_NAME} PRIVATE matrix)
 
 #----------------testing---------------------------------------------------------------
-# add_executable(tests_matrix1d tests/tests_matrix1d.cpp)
-# target_include_directories(tests_matrix1d PRIVATE matrix)
-# target_link_libraries(tests_matrix1d PRIVATE Catch2::Catch2WithMain)
-
-# add_executable(tests_matrix2d tests/tests_matrix2d.cpp)
-# target_include_directories(tests_matrix2d PRIVATE matrix)
-# target_link_libraries(tests_matrix2d PRIVATE Catch2::Catch2WithMain)
-
-# add_executable(tests_matrix3d tests/tests_matrix3d.cpp)
-# target_include_directories(tests_matrix3d PRIVATE matrix)
-# target_link_libraries(tests_matrix3d PRIVATE Catch2::Catch2WithMain)
-
 add_executable(tests tests/tests_matrix1d.cpp tests/tests_matrix2d.cpp tests/tests_matrix3d.cpp)
 target_include_directories(tests PRIVATE matrix)
 target_link_libraries(tests PRIVATE Catch2::Catch2WithMain)
@@ -39,6 +27,3 @@ list(APPEND CMAKE_MODULE_PATH ${catch2_SOURCE_DIR}/extras)
 include(CTest)
 include(Catch)
 catch_discover_tests(tests)
-# catch_discover_tests(tests_matrix1d)
-# catch_discover_tests(tests_matrix2d)
-# catch_discover_tests(tests_matrix3d)
