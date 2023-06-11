@@ -189,7 +189,7 @@ namespace matrix
                             a.getRawData().cend(),
                             m_data.begin(),
                             m_data.begin(),
-                            [](const T& a , const J& b){return a+b;}
+                            [](const T& a , const J& b){return b+a;}
                        );
             return *this;
         }
@@ -203,7 +203,7 @@ namespace matrix
                             a.getRawData().cend(),
                             m_data.begin(),
                             m_data.begin(),
-                            [](const T& a , const J& b){return a-b;}
+                            [](const T& a , const J& b){return b-a;}
                        );
             return *this;
         }
@@ -217,7 +217,7 @@ namespace matrix
                             a.getRawData().cend(),
                             m_data.begin(),
                             m_data.begin(),
-                            [](const T& a , const J& b){return a*b;}
+                            [](const T& a , const J& b){return b*a;}
                        );
             return *this;
         }
@@ -231,7 +231,7 @@ namespace matrix
                             a.getRawData().cend(),
                             m_data.begin(),
                             m_data.begin(),
-                            [](const T& a , const J& b){return a/b;}
+                            [](const T& a , const J& b){return b/a;}
                        );
             return *this;
         }
@@ -316,8 +316,8 @@ namespace matrix
             this->assertSameSize(*this, a);
             for(size_t i=0; i<a.size(); i++)
             {
-                bool isEqual = (this->m_data[i] > (a.getRawData()[i]-threshold))
-                                &&
+                bool isEqual = (this->m_data[i] > (a.getRawData()[i]+threshold))
+                                ||
                                 (this->m_data[i] < (a.getRawData()[i]-threshold));
                 if(isEqual)
                 {
