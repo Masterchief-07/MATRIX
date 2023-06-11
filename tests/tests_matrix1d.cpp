@@ -21,7 +21,7 @@ TEST_CASE("test MATRIX1D", "[VECTOR]") {
     }
     SECTION("MATRIX ON MATRIX OPERATION"){
     matrix::Matrix1D<double> myVect{{1,2,3,4,5,6,7,8,9}};
-    matrix::Matrix1D<double> myVect2{{1,2,3,4,5,6,7,8,9}};
+    matrix::Matrix1D<int> myVect2{{1,2,3,4,5,6,7,8,9}};
     myVect+=myVect2;
     for (size_t i=0; i<myVect.size(); i++)
     {

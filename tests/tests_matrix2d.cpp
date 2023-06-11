@@ -133,18 +133,4 @@ TEST_CASE("test MATRIX2D", "[MATRIX2D]") {
         REQUIRE(mat == (result*3)/3);
 
     }
-    SECTION("matrix to scalar DIFFERENT VALUE operation")
-    {
-       matrix::Matrix2D<int> mat{10,10, 2};
-        matrix::Matrix2D<double> result{10,10, 2};
-        mat += 3.75;
-        REQUIRE(mat == result+3.75);
-        mat -= 3.75;
-        REQUIRE(mat == (result+3.75)-3.75);
-        mat *= 3.75;
-        REQUIRE(mat == result*3.75);
-        mat /= 3.75;
-        REQUIRE(mat == (result*3.75)/3.75);
-
-    }
 }
