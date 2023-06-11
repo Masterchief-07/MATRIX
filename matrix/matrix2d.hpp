@@ -2,6 +2,7 @@
 #include <concepts>
 #include <vector>
 #include <cmath>
+#include <execution>
 #include <matrix1d.hpp>
 
 namespace matrix
@@ -12,10 +13,12 @@ namespace matrix
         private:
             size_t m_rows, m_columns;
             std::vector<T> m_data;
-            static void assertSameSize(const Matrix2D<T> x, const Matrix2D<T> y)
+            template<typename J>
+            requires SCALAR<J>
+            static void assertSameSize(const Matrix2D<T> x, const Matrix2D<J> y)
             {
-                assert(x.m_rows == y.m_rows);
-                assert(x.m_columns == y.m_columns);
+                assert(x.m_rows == y.getRows());
+                assert(x.m_columns == y.getColumns());
                 assert(x.size() == y.size());
             }
             size_t getIndex(size_t rows, size_t columns) const
@@ -45,12 +48,20 @@ namespace matrix
         {
 
         }
+        template<typename J>
+        requires SCALAR<J>
+        Matrix2D(const Matrix1D<J>& data):m_rows{1}, m_columns{data.size()}, m_data(data.size(), 0)
+        {
+            std::copy(data.cbegin(), data.cend(), m_data.begin());
+        }
         size_t size() const{
             return m_data.size();
         }
 
-        inline size_t getRows() const { return m_rows;}
-        inline size_t getColumns() const { return m_columns;}
+        inline size_t getRows() const       { return m_rows;}
+        inline size_t getColumns() const    { return m_columns;}
+        std::vector<T>& getRawData()        { return m_data; }
+        const std::vector<T>& getRawData() const{ return m_data;}
 
         T& at(size_t rows, size_t columns)
         {
@@ -60,6 +71,17 @@ namespace matrix
         T at(size_t rows, size_t columns) const
         {
             return m_data[getIndex(rows, columns)];
+        }
+
+        Matrix1D<T> at(size_t rows) const
+        {
+            assert(m_rows > rows);
+            // std::vector<T> result(m_columns);
+            Matrix1D<T> result{m_columns};
+            auto start = rows*m_columns;
+            auto end = start + (m_columns);
+            std::copy(m_data.begin()+start, m_data.begin()+end, result.begin());
+            return result;
         }
 
         Matrix2D<T> Tr() const
@@ -105,16 +127,17 @@ namespace matrix
             return result;
         }
 
-        Matrix2D<T> dot(const Matrix2D<T>& matrix2)const
+        template<typename J>
+        Matrix2D<T> dot(const Matrix2D<J>& matrix2)const
         {
-            assert(matrix2.m_rows == this->m_columns);
-            Matrix2D<T> result{this->m_rows, matrix2.m_columns};
+            assert(matrix2.getRows() == this->getColumns());
+            Matrix2D<T> result{this->m_rows, matrix2.getColumns()};
             for(size_t i = 0;  i < result.m_rows; ++i)
             {
                 for(size_t k = 0; k < result.m_columns; ++k)
                 {
                     T sum = 0;
-                    for(size_t j = 0; j < this->m_columns; ++j)
+                    for(size_t j = 0; j < this->getColumns(); ++j)
                     {
                         sum += this->at(i,j) * matrix2.at(j,k);
                     }
@@ -155,48 +178,69 @@ namespace matrix
             }
             return *this;
         }
-        Matrix2D<T>& operator+=(const Matrix2D<T>& a)
+        //-------------------------------------------------------------------------------------------------------
+        template<typename J>
+        requires SCALAR<J>
+        Matrix2D<T>& operator+=(const Matrix2D<J>& a)
         {
             this->assertSameSize(*this, a);
-            for (size_t i=0; i<this->size(); i++)
-            {
-                this->m_data[i] += a.m_data[i];
-            }
+            std::transform(
+                            a.getRawData().cbegin(), 
+                            a.getRawData().cend(),
+                            m_data.begin(),
+                            m_data.begin(),
+                            [](const T& a , const J& b){return a+b;}
+                       );
             return *this;
         }
-        Matrix2D<T>& operator-=(const Matrix2D<T>& a)
+        template<typename J>
+        requires SCALAR<J>
+        Matrix2D<T>& operator-=(const Matrix2D<J>& a)
         {
             this->assertSameSize(*this, a);
-            for (size_t i=0; i<this->size(); i++)
-            {
-                this->m_data[i] -= a.m_data[i];
-            }
+            std::transform(
+                            a.getRawData().cbegin(), 
+                            a.getRawData().cend(),
+                            m_data.begin(),
+                            m_data.begin(),
+                            [](const T& a , const J& b){return a-b;}
+                       );
             return *this;
         }
-        Matrix2D<T>& operator*=(const Matrix2D<T>& a)
+        template<typename J>
+        requires SCALAR<J>
+        Matrix2D<T>& operator*=(const Matrix2D<J>& a)
         {
             this->assertSameSize(*this, a);
-            for (size_t i=0; i<this->size(); i++)
-            {
-                this->m_data[i] *= a.m_data[i];
-            }
+            std::transform(
+                            a.getRawData().cbegin(), 
+                            a.getRawData().cend(),
+                            m_data.begin(),
+                            m_data.begin(),
+                            [](const T& a , const J& b){return a*b;}
+                       );
             return *this;
         }
-        Matrix2D<T>& operator/=(const Matrix2D<T>& a)
+        template<typename J>
+        requires SCALAR<J>
+        Matrix2D<T>& operator/=(const Matrix2D<J>& a)
         {
             this->assertSameSize(*this, a);
-            for (size_t i=0; i<this->size(); i++)
-            {
-                this->m_data[i] /= a.m_data[i];
-            }
+            std::transform(
+                            a.getRawData().cbegin(), 
+                            a.getRawData().cend(),
+                            m_data.begin(),
+                            m_data.begin(),
+                            [](const T& a , const J& b){return a/b;}
+                       );
             return *this;
         }
         Matrix2D<T>& operator^(int value)
         {
-            for(auto &i:this->m_data)
+            std::for_each(m_data.begin(), m_data.end(), [value](const T& a)
             {
-                i = std::pow(i, value);
-            }
+                return std::pow(a, value);
+            });
             return *this;
         }
         //-------------------------------------------------------------------------------------------------------
@@ -234,33 +278,48 @@ namespace matrix
             return a/=b;   
         }
 
-        friend Matrix2D<T> operator+ (Matrix2D<T> a, const Matrix2D<T>& b)
+        //-------------------------------------------------------------------------------------------------------
+        template<typename J>
+        requires SCALAR<J>
+        friend Matrix2D<T> operator+ (Matrix2D<T> a, const Matrix2D<J>& b)
         {
             assertSameSize(a, b);
             return a+=b;   
         }
-        friend Matrix2D<T> operator- (Matrix2D<T> a, const Matrix2D<T>& b)
+        template<typename J>
+        requires SCALAR<J>
+        friend Matrix2D<T> operator- (Matrix2D<T> a, const Matrix2D<J>& b)
         {
             assertSameSize(a, b);
             return a-=b;   
         }
-        friend Matrix2D<T> operator* (Matrix2D<T> a, const Matrix2D<T>& b)
+        template<typename J>
+        requires SCALAR<J>
+        friend Matrix2D<T> operator* (Matrix2D<T> a, const Matrix2D<J>& b)
         {
             assertSameSize(a, b);
             return a*=b;   
         }
-        friend Matrix2D<T> operator/ (Matrix2D<T> a, const Matrix2D<T>& b)
+        template<typename J>
+        requires SCALAR<J>
+        friend Matrix2D<T> operator/ (Matrix2D<T> a, const Matrix2D<J>& b)
         {
             assertSameSize(a, b);
             return a/=b;   
         }
         //-------------------------------------------------------------------------------------------------------
-        bool operator==(const Matrix2D<T>& a) const
+        template<typename J>
+        requires SCALAR<J>
+        bool operator==(const Matrix2D<J>& a) const
         {
+            double threshold = 0.000001;
             this->assertSameSize(*this, a);
             for(size_t i=0; i<a.size(); i++)
             {
-                if(this->m_data[i] != a.m_data[i])
+                bool isEqual = (this->m_data[i] > (a.getRawData()[i]-threshold))
+                                &&
+                                (this->m_data[i] < (a.getRawData()[i]-threshold));
+                if(isEqual)
                 {
                     return false;
                 }
@@ -268,7 +327,9 @@ namespace matrix
             return true;
         }
 
-        bool operator!=(const Matrix2D<T>& a) const
+        template<typename J>
+        requires SCALAR<J>
+        bool operator!=(const Matrix2D<J>& a) const
         {
             return !(*this==a);
         }
