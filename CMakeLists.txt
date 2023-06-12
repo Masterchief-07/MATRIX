@@ -15,8 +15,14 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(Catch2)
 
 
-add_executable(${PROJECT_NAME} main.cpp)
-target_include_directories(${PROJECT_NAME} PRIVATE matrix)
+add_library(${PROJECT_NAME} INTERFACE)
+target_include_directories(${PROJECT_NAME} INTERFACE matrix)
+export(TARGETS ${PROJECT_NAME} FILE {PROJECT_NAME}.cmake)
+
+
+# add_executable(main main.cpp)
+# target_link_libraries(main PRIVATE Matrix)
+# target_include_directories(${PROJECT_NAME} PRIVATE matrix)
 
 #----------------testing---------------------------------------------------------------
 add_executable(tests tests/tests_matrix1d.cpp tests/tests_matrix2d.cpp tests/tests_matrix3d.cpp)
