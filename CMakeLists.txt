@@ -18,7 +18,7 @@ add_library(Matrix INTERFACE)
 target_include_directories(Matrix INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/matrix>)
 install(TARGETS Matrix EXPORT MatrixTargets)
 install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/ DESTINATION include)
-install(EXPORT MatrixTargets FILE MatrixTargets.cmake DESTINATION lib/cmake/Matrix)
+install(EXPORT MatrixTargets FILE MatrixConfig.cmake DESTINATION lib/cmake/Matrix)
 
 # add_executable(main main.cpp)
 # target_link_libraries(main PRIVATE Matrix)
