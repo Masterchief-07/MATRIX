@@ -133,4 +133,10 @@ TEST_CASE("test MATRIX2D", "[MATRIX2D]") {
         REQUIRE(mat == (result*3)/3);
 
     }
+
+    SECTION("matrix1d and matrix2d")
+    {
+    matrix::Matrix1D<int> mat1d{{1, 2,3,4,5,6,7,8}};
+    matrix::Matrix2D<int> mat2d{2,4,{1,2,3,4,5,6,7,8}};
+    }
 }
