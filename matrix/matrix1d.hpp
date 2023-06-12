@@ -39,6 +39,15 @@ namespace matrix
             return m_data.size();
         }
 
+        std::vector<T>& getRawData()
+        {
+            return m_data;
+        }
+        const std::vector<T>& getRawData() const
+        {
+            return m_data;
+        }
+
         T norm() const
         {
             T result{0};
@@ -72,13 +81,13 @@ namespace matrix
             return result;
         }
 
-        std::vector<T>& getRawData()
+        T mean() const
         {
-            return m_data;
-        }
-        const std::vector<T>& getRawData() const
-        {
-            return m_data;
+            T result = 0;
+            for(const auto& i: m_data)
+                result += i;
+            result /= m_data.size();
+            return result;
         }
         //-------------------------------------------------------------------------------------------------------
         auto begin()               {return m_data.begin();}

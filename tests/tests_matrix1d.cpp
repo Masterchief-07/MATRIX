@@ -111,4 +111,10 @@ TEST_CASE("test MATRIX1D", "[VECTOR]") {
     REQUIRE(3*myVect == myVect*3);
     // REQUIRE(3/myVect == myVect/3);
     }
+    SECTION("MATRIX MEAN")
+    {
+        matrix::Matrix1D<double> mat{{1,2,3,4,5,6,7,8,9,10}};
+        REQUIRE(mat.mean() == 55.0/10);
+
+    }
 }
