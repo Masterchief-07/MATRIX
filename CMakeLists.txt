@@ -14,11 +14,11 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(Catch2)
 
-
-add_library(${PROJECT_NAME} INTERFACE)
-target_include_directories(${PROJECT_NAME} INTERFACE matrix)
-export(TARGETS ${PROJECT_NAME} FILE {PROJECT_NAME}.cmake)
-
+add_library(Matrix INTERFACE)
+target_include_directories(Matrix INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/matrix>)
+install(TARGETS Matrix EXPORT MatrixTargets)
+install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/ DESTINATION include)
+install(EXPORT MatrixTargets FILE MatrixTargets.cmake DESTINATION lib/cmake/Matrix)
 
 # add_executable(main main.cpp)
 # target_link_libraries(main PRIVATE Matrix)
